@@ -1,0 +1,52 @@
+#!/opt/local/bin/bash
+# Start/stop what I need to work on my capstone project.
+
+# Get this to autmatically stop the virtual environment as well.
+
+PORT=8000
+SCHOOL_DIRECTORY=/Users/bryan/school/
+PROJECT_NAME=capstone
+PROJECT_DIRECTORY=$SCHOOL_DIRECTORY$PROJECT_NAME
+WEB2PY_DIRECTORY=$PROJECT_DIRECTORY/web2py
+PID_FILE=$WEB2PY_DIRECTORY/httpserver.pid
+
+function start_capstone_project {
+    if [ -e $PID_FILE ]
+    then
+       echo "web2py is already running."
+    else
+        # echo "Activating virtual environment..."
+        # source "$($HOME)/.virtualenvs/capstone/bin/activate"
+        echo "Starting web2py..."
+        python $WEB2PY_DIRECTORY/web2py.py -a bob &
+    fi
+}
+
+function stop_capstone_project {
+    if [ -e $PID_FILE ]
+    then
+        echo "Stopping web2py..."
+        echo "Shutting down server..."
+        PID=$(<$PID_FILE)
+        kill -SIGTERM $PID
+        # echo "Deactivating virtual environment..."
+        # deactivate
+    else
+        echo "web2py is not running."
+    fi
+}
+
+ACTION=$1
+
+if [ "start" = $ACTION ]
+then
+    start_capstone_project
+    open http://localhost:$PORT
+elif [ "stop" = $ACTION ]
+then
+    stop_capstone_project
+else
+    echo "Um, what?"
+fi
+
+echo ""

@@ -1,0 +1,35 @@
+#!/opt/local/bin/bash
+
+# This assumes this script lives in "$approot/private/".
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+DROP_SCRIPT="$BASE_DIR/private/db/drop_tables.sql"
+CACHE="$BASE_DIR/cache"
+DB="$BASE_DIR/databases"
+ERR="$BASE_DIR/errors"
+SESS="$BASE_DIR/sessions"
+
+if [ -e $DROP_SCRIPT ]; then
+    echo "Dropping database tables"
+    `mysql -u sgt_admin --password=bobbob < $DROP_SCRIPT`
+fi
+
+if [ -d $CACHE ]; then
+    echo "Clearing $CACHE"
+    `rm -f $CACHE/*`
+fi
+
+if [ -d $DB ]; then
+    echo "Clearing $DB"
+    `rm -f $DB/*`
+fi
+
+if [ -d $ERR ]; then
+    echo "Clearing $ERR"
+    `rm -f $ERR/*`
+fi
+
+if [ -d $SESS ]; then
+    echo "Clearing $SESS"
+    `rm -rf $SESS/*`
+fi
